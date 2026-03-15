@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Option A (recommended): set a custom claim { admin: true } on your admin user.
+    function hasAdminClaim() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // Option B: hardcode admin UIDs (quick start). Replace with real UIDs.
+    function isAllowedUid() {
+      return isSignedIn() && request.auth.uid in [
+        // "REPLACE_WITH_YOUR_ADMIN_UID"
+      ];
+    }
+
+    function isAdmin() {
+      return hasAdminClaim() || isAllowedUid();
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
+
