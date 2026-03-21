@@ -1,9 +1,11 @@
 import React from "react";
 import Products from "../components/Products";
+import Navbar from "../components/Navbar";
 
 const HomePage = () => {
 	return (
-		<>
+		<div className="home">
+			<Navbar />
 			<section className="hero">
 				<div className={"announce"}>
 					<div className={"dot"}>
@@ -20,7 +22,7 @@ const HomePage = () => {
 			</section>
 
 			<Products />
-		</>
+		</div>
 	);
 };
 

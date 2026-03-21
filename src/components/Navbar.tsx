@@ -47,7 +47,7 @@ const Navbar = () => {
                                 <Link to={''}>Log In</Link>
                             </button>
 
-                            <a href="#upload" className={'cta'}>Get Started</a>
+                            <Link to={'/auth'} className={'cta'}>Get Started</Link>
 
                         </>
                     )}

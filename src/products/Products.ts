@@ -43,7 +43,7 @@ export const products = [
 
     },
     {
-        id: 5,
+        id: 6,
         name: 'wireless Headphones',
         price:99.99,
         description:'Premium wireless headphones with noise cancellation',
