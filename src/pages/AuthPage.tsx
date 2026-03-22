@@ -1,5 +1,6 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, { useContext, useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
+import { Authcontext } from "../context/AuthProvider";
 
 const AuthPage = () => {
 	const [username, setUsername] = useState<string>("");
@@ -7,11 +8,29 @@ const AuthPage = () => {
 	const [passowrd, setPassword] = useState<string>("");
 	const [signInMode, setSignInMode] = useState<boolean>(true);
 
-	const handleSUbmit = () => {};
+	const { signUp, signIn } = useContext(Authcontext);
+
+	const handleSUbmit = (e: React.FormEvent) => {
+		e.preventDefault();
+
+		if (!signInMode) {
+			signUp(username, email, passowrd);
+
+			setUsername("");
+			setEmail("");
+			setPassword("");
+		} else {
+			signIn(email, passowrd)
+			setEmail('') 
+			setPassword('')
+		}
+
+		
+	};
 
 	const HandleAuthMode = () => {
-		setSignInMode((prev) => !prev)
-	}
+		setSignInMode((prev) => !prev);
+	};
 
 	return (
 		<div>
@@ -26,7 +45,12 @@ const AuthPage = () => {
 					</div>
 
 					<div className="actions">
-						<button onClick={HandleAuthMode} className="cursor-pointer">{signInMode ? 'Sign up' : 'Sign In'}</button>
+						<button
+							onClick={HandleAuthMode}
+							className="cursor-pointer"
+						>
+							{signInMode ? "Sign up" : "Sign In"}
+						</button>
 
 						<Link to={"/auth"} className={"cta"}>
 							Request Demo
@@ -44,10 +68,7 @@ const AuthPage = () => {
 								<div className={"upload-icon"}></div>
 
 								<h3>
-									Customer{" "}
-									{signInMode ?
-										"Login"
-										: "Sign up"}
+									Customer {signInMode ? "Login" : "Sign up"}
 								</h3>
 								<p>
 									Hey, Enter your details to{" "}
@@ -97,18 +118,33 @@ const AuthPage = () => {
 
 										<div>
 											<Link to={""}>
-												Having trouble in {signInMode ? 'Sign in': 'Sign up'}?
+												Having trouble in{" "}
+												{signInMode
+													? "Sign in"
+													: "Sign up"}
+												?
 											</Link>
 										</div>
 
 										<div className={"actions"}>
-											<button className="cta">
-												{signInMode  ? 'Sign in' : 'Sign up'}
+											<button
+												type="submit"
+												className="cta"
+											>
+												{signInMode
+													? "Sign in"
+													: "Sign up"}
 											</button>
 										</div>
 
 										<div>
-											<span>-Or {signInMode ? 'sign in' : 'sign up'} with-</span>
+											<span>
+												-Or{" "}
+												{signInMode
+													? "sign in"
+													: "sign up"}{" "}
+												with-
+											</span>
 										</div>
 										<div className={"actions mt-3"}>
 											<button className="demo font-semibold p-3 cursor-pointer">
@@ -123,11 +159,17 @@ const AuthPage = () => {
 										</div>
 										<div>
 											<p>
-												{signInMode ? "Don't have an account?" : 'Do you have an account'}
-												
-												<span onClick={HandleAuthMode} className="font-bold cursor-pointer">
-													{signInMode ? 'Sign up' : 'sign in'}
-													
+												{signInMode
+													? "Don't have an account?"
+													: "Do you have an account"}
+
+												<span
+													onClick={HandleAuthMode}
+													className="font-bold cursor-pointer"
+												>
+													{signInMode
+														? "Sign up"
+														: "sign in"}
 												</span>
 											</p>
 										</div>

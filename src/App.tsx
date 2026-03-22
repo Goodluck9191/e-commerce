@@ -3,19 +3,19 @@ import HomePage from "./pages/HomePage";
 
 import ProfilePage from "./pages/ProfilePage";
 import AuthPage from "./pages/AuthPage";
-import { UserProvider } from "./context/UserContextProvider";
+import AuthProvider from "./context/AuthProvider";
 
 export default function App() {
 	return (
 		<div className="hero">
-			<UserProvider>
+			<AuthProvider>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/auth" element={<AuthPage />} />
 					<Route path="*" element={<h1>404 not Found</h1>} />
 				</Routes>
-			</UserProvider>
+			</AuthProvider>
 		</div>
 	);
 }
