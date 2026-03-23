@@ -10,76 +10,70 @@ export interface User {
 }
 
 interface UserContextType {
-	user: User[] | null;
+	users: User[] | null;
 	signUp: (username: string, email: string, password: string) => void;
 	signIn: (email: string, password: string) => void;
 }
 
 const contextInitials = {
-	user: null,
-	signUp: () => null,
-	signIn: () => null,
+	users: null,
+	signUp: () => {},
+	signIn: () => {},
 };
 
-export const Authcontext = createContext<UserContextType>(contextInitials);
+export const AuthContext = createContext<UserContextType>(contextInitials);
 
 const AuthProvider = (props: Props) => {
-	const [user, setUser] = useState<User[] | null>(null);
-	const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
-	const [exist, setExist] = useState<boolean>(false);
+	const [users, setUsers] = useState<User[]>([])
 
-	useEffect(() => {
-		const users = JSON.parse(localStorage.getItem("users") || "[]");
-		setUser(users);
-	}, []);
 
-	function signUp(username: string, email: string, password: string) {
-		user?.map((user) => {
-			if (user.email == email) {
-				setExist(true);
-			}
-		});
+	useEffect(()=> {
+		const storedUser = JSON.parse(localStorage.getItem("users") || "[]")
+		setUsers(storedUser)
+	}, [])
 
-		if (exist) {
-			window.alert("The email already exist");
-            setExist(false)
+
+	function signUp(username:string, email:string, password:string) {
+		const exist = users.some(u => u.email == email)
+
+		if(exist) {
+			alert('Email already exist please try to Login')
+			return;
+		}
+
+		const newUser: User = { username, email, password }
+
+		const updatedUser = [...users, newUser]
+
+		setUsers(updatedUser);
+
+		localStorage.setItem("users", JSON.stringify(updatedUser))
+
+		alert('user added successfully')
+	}
+
+	function signIn(email:string, password:string) {
+
+		const foundUser = users.find(u => u.email == email && u.password == password)
+
+		if (foundUser) {
+
+			alert(`welcome ${foundUser.username}`)
+
 		} else {
-			const newUser = {
-				username: username,
-				email: email,
-				password: password,
-			};
-
-			user?.push(newUser);
-
-			try {
-				localStorage.setItem("users", JSON.stringify(user));
-				window.alert("user added succseesfully");
-			} catch (error) {
-				console.log(error);
-				window.alert("failed to add user");
-			}
+			alert('Incorrect Login')
 		}
 	}
-	function signIn(email: string, password: string) {
-		user?.map((user) => {
-			if (user.email == email && user.password == password) {
-				setIsSignedIn(true);
-			}
-		});
 
-		if (isSignedIn) {
-			window.alert(`welcome you successfully login}`);
-			setIsSignedIn(false);
-		} else {
-			window.alert("Sorry Incorrect Login");
-		}
-	}
+
+
+
+
 
 	return (
-		<Authcontext.Provider value={{ signUp, user, signIn }}>
+		<AuthContext.Provider value={{ signUp, users, signIn }}>
 			{props.children}
-		</Authcontext.Provider>
+		</AuthContext.Provider>
 	);
 };
 

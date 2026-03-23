@@ -1,26 +1,26 @@
 import React, { useContext, useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-import { Authcontext } from "../context/AuthProvider";
+import { AuthContext } from "../context/AuthProvider";
 
 const AuthPage = () => {
 	const [username, setUsername] = useState<string>("");
 	const [email, setEmail] = useState<string>("");
-	const [passowrd, setPassword] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 	const [signInMode, setSignInMode] = useState<boolean>(true);
 
-	const { signUp, signIn } = useContext(Authcontext);
+	const { signUp, signIn } = useContext(AuthContext);
 
 	const handleSUbmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
 		if (!signInMode) {
-			signUp(username, email, passowrd);
+			signUp(username, email, password);
 
 			setUsername("");
 			setEmail("");
 			setPassword("");
 		} else {
-			signIn(email, passowrd)
+			signIn(email, password)
 			setEmail('') 
 			setPassword('')
 		}
@@ -109,7 +109,7 @@ const AuthPage = () => {
 										<input
 											type="password"
 											placeholder="Password"
-											value={passowrd}
+											value={password}
 											onChange={(
 												e: ChangeEvent<HTMLInputElement>,
 											) => setPassword(e.target.value)}
