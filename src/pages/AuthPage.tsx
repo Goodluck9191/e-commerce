@@ -1,31 +1,37 @@
-import React, { useContext, useState, type ChangeEvent } from "react";
+import  { useContext, useState, } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
+import { useForm, type SubmitHandler } from "react-hook-form";
+
+type FormValues = {
+	username: string;
+	email: string;
+	password: string;
+};
 
 const AuthPage = () => {
-	const [username, setUsername] = useState<string>("");
-	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
 	const [signInMode, setSignInMode] = useState<boolean>(true);
 
 	const { signUp, signIn } = useContext(AuthContext);
 
-	const handleSUbmit = (e: React.FormEvent) => {
-		e.preventDefault();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<FormValues>();
+
+	const onSubmit:SubmitHandler<FormValues>= (data) => {
 
 		if (!signInMode) {
-			signUp(username, email, password);
+			signUp(data.username, data.email, data.password);
 
-			setUsername("");
-			setEmail("");
-			setPassword("");
 		} else {
-			signIn(email, password)
-			setEmail('') 
-			setPassword('')
+			signIn(data.email, data.password);
+	
 		}
 
-		
+		reset()
 	};
 
 	const HandleAuthMode = () => {
@@ -81,40 +87,62 @@ const AuthPage = () => {
 									)}
 								</p>
 
-								<form onSubmit={handleSUbmit}>
+								<form onSubmit={handleSubmit(onSubmit)}>
 									<div className="flex flex-col gap-5 mt-8">
 										{!signInMode && (
+											<>
 											<input
 												type="text"
 												placeholder="Username"
-												value={username}
-												onChange={(
-													e: ChangeEvent<HTMLInputElement>,
-												) =>
-													setUsername(e.target.value)
-												}
+												{...register("username", {
+													required:
+														"username is required",
+													minLength: {
+														value: 6,
+														message:
+															"username must be at least 6 characters",
+													},
+													maxLength: {
+														value: 12,
+														message:
+															"Username must be less than 12 character",
+													},
+												})}
 												className="border p-3 rounded "
 											/>
+											{errors.username && (<span>{errors.username.message}</span>)}
+											</>
 										)}
 
 										<input
 											type="email"
 											placeholder="Enter Email"
-											value={email}
-											onChange={(
-												e: ChangeEvent<HTMLInputElement>,
-											) => setEmail(e.target.value)}
+											{...register("email", {
+												required: "Email is required",
+											})}
 											className="border p-3 rounded "
 										/>
+										{errors.email && (<span>{errors.email.message}</span>)}
 										<input
 											type="password"
 											placeholder="Password"
-											value={password}
-											onChange={(
-												e: ChangeEvent<HTMLInputElement>,
-											) => setPassword(e.target.value)}
+											{...register("password", {
+												required:
+													"Password is required",
+												minLength: {
+													value: 6,
+													message:
+														"Password must be at least 6 characters",
+												},
+												maxLength: {
+													value: 12,
+													message:
+														"Password must be less than 12 character",
+												},
+											})}
 											className="border p-3 rounded "
 										/>
+										{errors.password && (<span>{errors.password.message}</span>)}
 
 										<div>
 											<Link to={""}>
