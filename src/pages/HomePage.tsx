@@ -1,8 +1,12 @@
-import React from "react";
+
 import Products from "../components/Products";
 import Navbar from "../components/Navbar";
+import { ArrowRight} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+
+	const navigate = useNavigate()
 	return (
 		<div className="home">
 			<Navbar />
@@ -19,6 +23,14 @@ const HomePage = () => {
 				<p className={"subtitle"}>
 					Discover the amazing Products with great Prices
 				</p>
+
+				<div className={'actions'}>
+                  <button onClick={() => navigate('/auth')} className={'cta'}>
+                      Get Started <ArrowRight className={'icon'}/>
+                  </button>
+
+				  </div>
+
 			</section>
 
 			<Products />

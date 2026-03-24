@@ -12,7 +12,7 @@ type FormValues = {
 const AuthPage = () => {
 	const [signInMode, setSignInMode] = useState<boolean>(true);
 
-	const { signUp, signIn } = useContext(AuthContext);
+	const { signUp, signIn, user, signOut } = useContext(AuthContext);
 
 	const {
 		register,
@@ -61,6 +61,7 @@ const AuthPage = () => {
 						<Link to={"/auth"} className={"cta"}>
 							Request Demo
 						</Link>
+						
 					</div>
 				</nav>
 			</header>
@@ -87,6 +88,10 @@ const AuthPage = () => {
 									)}
 								</p>
 
+								<h3>{user?.username}</h3>
+
+								
+
 								<form onSubmit={handleSubmit(onSubmit)}>
 									<div className="flex flex-col gap-5 mt-8">
 										{!signInMode && (
@@ -98,9 +103,9 @@ const AuthPage = () => {
 													required:
 														"username is required",
 													minLength: {
-														value: 6,
+														value: 4,
 														message:
-															"username must be at least 6 characters",
+															"username must be at least 4 characters",
 													},
 													maxLength: {
 														value: 12,

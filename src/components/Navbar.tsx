@@ -1,23 +1,19 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { userContext } from "../context/UserContextProvider";
+import { AuthContext } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 const Navbar = () => {
-	const { users } = useContext(userContext);
-    const [isSignedIn, setIsSigned] = useState<boolean>(true)
 
-    const username = users?.map((user) => {
-        if (user.name == 'goodluck') {
-            return user.name
-        }
-    })
+    const { user, signOut } = useContext(AuthContext)
+    const navigate = useNavigate()
 
-    const handleLogin = () => {
-        setIsSigned((prev) => !prev)
-    }
+
+
+
 	return (
 		<header className="navbar">
 			<nav className="inner">
@@ -37,20 +33,17 @@ const Navbar = () => {
 
 				<div className="actions">
 
-                    { isSignedIn ? (
+                    { user ? (
                         <>
-                            <span className={'greeting'}>{ username?`Hi, ${username}`: 'Signed in'}</span>
-                            <button className={'btn cta'}>
-                                <Link to={''} onClick={handleLogin}>Log Out</Link>
+                            <span className={'greeting'}>{ user.username?`Hi, ${user.username}`: 'Signed in'}</span>
+                            <button className={'btn cta'} onClick={signOut}>
+                                Log out
                             </button>
                         </>
                     ) : (
                         <>
-                            <button >
-                                <Link to={''}>Log In</Link>
-                            </button>
 
-                            <Link to={'/auth'} className={'cta'}>Get Started</Link>
+                            <button onClick={() => navigate('/auth')} className="cta">Log in</button>
 
                         </>
                     )}

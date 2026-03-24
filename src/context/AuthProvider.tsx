@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 	children: React.ReactNode;
@@ -10,68 +11,81 @@ export interface User {
 }
 
 interface UserContextType {
-	users: User[] | null;
+	user: User | null;
 	signUp: (username: string, email: string, password: string) => void;
 	signIn: (email: string, password: string) => void;
+	signOut: () => void;
 }
 
 const contextInitials = {
-	users: null,
+	user: null,
 	signUp: () => {},
 	signIn: () => {},
+	signOut: () => {},
 };
 
 export const AuthContext = createContext<UserContextType>(contextInitials);
 
 const AuthProvider = (props: Props) => {
-	const [users, setUsers] = useState<User[]>([])
+	const navigate = useNavigate();
 
+	const [user, setUser] = useState<User | null>(
+		localStorage.getItem("currentUser")
+			? JSON.parse(localStorage.getItem("currentUser") || "")
+			: null,
+	);
 
-	useEffect(()=> {
-		const storedUser = JSON.parse(localStorage.getItem("users") || "[]")
-		setUsers(storedUser)
-	}, [])
+	function signUp(username: string, email: string, password: string) {
+		const storedUser: User[] = JSON.parse(
+			localStorage.getItem("users") || "[]",
+		);
 
+		const exist = storedUser.some((u) => u.email == email);
 
-	function signUp(username:string, email:string, password:string) {
-		const exist = users.some(u => u.email == email)
-
-		if(exist) {
-			alert('Email already exist please try to Login')
+		if (exist) {
+			alert("Email already exist please try to Login");
 			return;
 		}
 
-		const newUser: User = { username, email, password }
+		const newUser: User = { username, email, password };
+		setUser(newUser)
+		localStorage.setItem("currentUser", JSON.stringify(newUser));
 
-		const updatedUser = [...users, newUser]
+		const updatedUser = [...storedUser, newUser];
 
-		setUsers(updatedUser);
+		localStorage.setItem("users", JSON.stringify(updatedUser));
 
-		localStorage.setItem("users", JSON.stringify(updatedUser))
+		alert("user added successfully");
 
-		alert('user added successfully')
+		navigate("/");
 	}
 
-	function signIn(email:string, password:string) {
+	function signIn(email: string, password: string) {
+		const storedUser: User[] = JSON.parse(
+			localStorage.getItem("users") || "[]",
+		);
 
-		const foundUser = users.find(u => u.email == email && u.password == password)
+		const foundUser = storedUser.find(
+			(u) => u.email == email && u.password == password,
+		);
 
 		if (foundUser) {
-
-			alert(`welcome ${foundUser.username}`)
-
+			alert(`welcome ${foundUser.username}`);
+			setUser(foundUser);
+			navigate("/");
 		} else {
-			alert('Incorrect Login')
+			alert("Incorrect Login");
 		}
 	}
 
-
-
-
-
+	function signOut() {
+		localStorage.removeItem("currentUser");
+		setUser(null);
+		navigate("/");
+	}
 
 	return (
-		<AuthContext.Provider value={{ signUp, users, signIn }}>
+		<AuthContext.Provider value={{ signUp, user, signIn, signOut }}>
 			{props.children}
 		</AuthContext.Provider>
 	);
