@@ -1,4 +1,3 @@
-
 import Products from "../components/Products";
 import Navbar from "../components/Navbar";
 import { ArrowRight} from "lucide-react";
