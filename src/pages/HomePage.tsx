@@ -2,8 +2,12 @@ import Products from "../components/Products";
 import Navbar from "../components/Navbar";
 import { ArrowRight} from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthProviders";
 
 const HomePage = () => {
+
+	const { user, signOut} = useContext(AuthContext)
 
 	const navigate = useNavigate()
 	return (

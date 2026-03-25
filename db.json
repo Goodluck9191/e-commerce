@@ -1,1 +1,17 @@
-{}
+{
+  "users": [
+    {
+      "username": "Goodluck",
+      "email": "goodluck@gmail.com",
+      "password": "12345678",
+      "id": "N6xHJp_ytpQ"
+    },
+    {
+      "username": "elia",
+      "email": "elia@gmail.com",
+      "password": "1234567",
+      "id": "86Sz7VYZCV8"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
