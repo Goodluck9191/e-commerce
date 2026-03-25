@@ -11,8 +11,8 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType>({
     user: null,
-    signUp: async () => {},
-    signIn: async () => {},
+    signUp: async () => false,
+    signIn: async () => false,
     signOut: () => {}
 })
 
@@ -39,7 +39,9 @@ const AuthProviders = ({ children }: {children: ReactNode}) => {
         }
 
         const newUser = await createUser({username, email, password})
+        setUser(newUser)
         alert('signUp successful!.')
+
         localStorage.setItem('user', JSON.stringify(newUser))
         
         return true
