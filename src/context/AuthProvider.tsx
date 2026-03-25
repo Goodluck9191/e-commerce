@@ -71,7 +71,9 @@ const AuthProvider = (props: Props) => {
 
 		if (foundUser) {
 			alert(`welcome ${foundUser.username}`);
+			localStorage.setItem("currentUser", JSON.stringify(foundUser));
 			setUser(foundUser);
+
 			navigate("/");
 		} else {
 			alert("Incorrect Login");
