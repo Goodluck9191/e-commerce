@@ -1,7 +1,8 @@
 import  { useContext, useState, } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthProvider";
+import { AuthContext } from "../context/AuthProviders";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 type FormValues = {
 	username: string;
@@ -12,7 +13,9 @@ type FormValues = {
 const AuthPage = () => {
 	const [signInMode, setSignInMode] = useState<boolean>(true);
 
-	const { signUp, signIn, user, signOut } = useContext(AuthContext);
+	const { signUp, signIn, user } = useContext(AuthContext);
+
+	const navigate = useNavigate()
 
 	const {
 		register,
@@ -21,13 +24,28 @@ const AuthPage = () => {
 		formState: { errors },
 	} = useForm<FormValues>();
 
-	const onSubmit:SubmitHandler<FormValues>= (data) => {
+	const onSubmit= async(data: FormValues) => {
 
 		if (!signInMode) {
-			signUp(data.username, data.email, data.password);
+			const success = await signUp(data.username, data.email, data.password);
+
+			if (success) {
+				navigate('/')
+			} else {
+				alert('sorry email already exist')
+			}
+
+			 
 
 		} else {
-			signIn(data.email, data.password);
+			const success = await signIn(data.email, data.password)
+
+			if (success) {
+				navigate('/')
+				
+			} else{
+				alert('Invalid credentials')
+			}
 	
 		}
 
